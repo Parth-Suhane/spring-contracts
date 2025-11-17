@@ -1,0 +1,5 @@
+com\example\demo\controller\PersonControllerWebMvcTest.class
+com\example\demo\service\PersonServiceTest.class
+com\example\demo\contract\PersonCreatedContract.class
+com\example\demo\controller\PersonControllerIntegrationTest.class
+com\example\demo\contract\BaseContractTest.class
