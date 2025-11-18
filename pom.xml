@@ -32,6 +32,10 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-validation</artifactId>
+      </dependency>
     <!-- JPA + H2 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -71,7 +75,6 @@
       <version>5.4.0</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <dependencyManagement>
@@ -83,6 +86,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>3.1.4</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -95,29 +105,27 @@
       </plugin>
 
       <!-- Spring Cloud Contract Verifier plugin -->
-<!--        <plugin>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-contract-maven-plugin</artifactId>-->
-<!--            <version>${spring-cloud-contract.version}</version>-->
-<!--            <extensions>true</extensions>-->
+        <plugin>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+            <version>4.1.2</version>
+            <extensions>true</extensions>
 
-<!--            <configuration>-->
-<!--                <baseClassForTests>com.example.demo.contract.BaseContractTest</baseClassForTests>-->
-<!--                &lt;!&ndash; NO contractsDslDir &ndash;&gt;-->
-<!--                <contractsMode>JAVA</contractsMode>-->
-<!--                <testFramework>JUNIT5</testFramework>-->
-<!--            </configuration>-->
+            <configuration>
+                <baseClassForTests>com.example.demo.contracts.BaseContractTest</baseClassForTests>
+                <testFramework>JUNIT5</testFramework>
+                <failOnNoContracts>false</failOnNoContracts>
+            </configuration>
 
-<!--            <executions>-->
-<!--                <execution>-->
-<!--                    <goals>-->
-<!--                        <goal>convert</goal>-->
-<!--                        <goal>generateTests</goal>-->
-<!--                    </goals>-->
-<!--                </execution>-->
-<!--            </executions>-->
-<!--        </plugin>-->
-
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>convert</goal>
+                        <goal>generateTests</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
 
         <!-- JaCoCo for coverage -->
       <plugin>

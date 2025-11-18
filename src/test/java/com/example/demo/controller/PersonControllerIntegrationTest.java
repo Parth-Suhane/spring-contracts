@@ -36,4 +36,50 @@ class PersonControllerIntegrationTest {
        .andExpect(status().isOk())
        .andExpect(jsonPath("$", not(empty())));
   }
+
+    @Test
+    void duplicateEmail_returns409() throws Exception {
+        repo.save(new Person("X", "dup@y.com"));
+
+        String body = "{\"name\":\"Y\",\"email\":\"dup@y.com\"}";
+
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void get_unknownId_returns404() throws Exception {
+        mvc.perform(get("/api/persons/999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void post_invalidJson_returns400() throws Exception {
+        String body = "{ \"name\": \"test\" ";
+
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void post_missingFields_returns400() throws Exception {
+        String body = "{\"email\":\"x@y.com\"}";
+
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void post_emptyBody_returns400() throws Exception {
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isBadRequest());
+    }
 }

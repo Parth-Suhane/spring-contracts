@@ -24,9 +24,15 @@ public class PersonService {
     }
 
     public Person create(Person p) {
-        repo.findByEmail(p.getEmail()).ifPresent(existing -> {
-            throw new IllegalArgumentException("Email already exists");
-        });
+        if (p.getName() == null || p.getName().isBlank())
+        throw new IllegalArgumentException("Name is required");
+
+        if (p.getEmail() == null || p.getEmail().isBlank())
+            throw new IllegalArgumentException("Email is required");
+
+        repo.findByEmail(p.getEmail())
+                .ifPresent(existing -> { throw new IllegalArgumentException("Duplicate email"); });
+
         return repo.save(p);
     }
 }

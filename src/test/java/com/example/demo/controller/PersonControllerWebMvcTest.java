@@ -54,4 +54,62 @@ class PersonControllerWebMvcTest {
        .andExpect(header().string("Location", containsString("/api/persons/5")))
        .andExpect(jsonPath("$.id", is(5)));
   }
+
+    @Test
+    void getById_notFound_returns404() throws Exception {
+        Mockito.when(service.findById(100L))
+                .thenReturn(Optional.empty());
+
+        mvc.perform(get("/api/persons/100"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void post_missingName_returns400() throws Exception {
+        String body = "{\"email\":\"x@y.com\"}";
+
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void post_malformedJson_returns400() throws Exception {
+        String body = "{ \"name\": \"Joe\", ";
+
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void post_emptyBody_returns400() throws Exception {
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void post_duplicateEmail_returns400() throws Exception {
+        Mockito.when(service.create(any()))
+                .thenThrow(new IllegalArgumentException("duplicate email"));
+
+        String body = "{\"name\":\"Joe\",\"email\":\"x@y.com\"}";
+
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void post_wrongContentType_returns415() throws Exception {
+        mvc.perform(post("/api/persons")
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("name=joe"))
+                .andExpect(status().isUnsupportedMediaType());
+    }
 }
