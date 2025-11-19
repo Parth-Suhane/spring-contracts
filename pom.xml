@@ -23,6 +23,11 @@
     <spring-cloud.version>2023.0.3</spring-cloud.version>
     <spring-cloud-contract.version>4.1.2</spring-cloud-contract.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
+      <sonar.projectKey>contract</sonar.projectKey>
+      <sonar.projectName>'contract</sonar.projectName>
+      <sonar.token>sqp_768968a4fb6f9bf96e42258dbed3704330d68606</sonar.token>
+      <sonar.host.url>http://localhost:9000</sonar.host.url>
+      <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
   <dependencies>
@@ -54,6 +59,12 @@
       <version>${spring-cloud-contract.version}</version>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+          <version>4.1.2</version>
+          <scope>test</scope>
+      </dependency>
 
     <!-- Test -->
     <dependency>
@@ -112,9 +123,12 @@
             <extensions>true</extensions>
 
             <configuration>
-                <baseClassForTests>com.example.demo.contracts.BaseContractTest</baseClassForTests>
+                <baseClassForTests>com.example.demo.contract.BaseContractTest</baseClassForTests>
+                <packageWithBaseClasses>com.example.demo.contract</packageWithBaseClasses>
                 <testFramework>JUNIT5</testFramework>
-                <failOnNoContracts>false</failOnNoContracts>
+                <contractsDirectory>src/test/java/com/example/demo/contracts</contractsDirectory>
+                <contractsMode>JAVA</contractsMode>
+                <failOnNoContracts>true</failOnNoContracts>
             </configuration>
 
             <executions>
@@ -132,6 +146,11 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.10</version>
+          <configuration>
+              <excludes>
+                  <exclude> **/DemoApplication.*</exclude>
+              </excludes>
+          </configuration>
         <executions>
           <execution>
             <goals>
