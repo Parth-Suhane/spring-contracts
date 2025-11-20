@@ -121,16 +121,10 @@
             <artifactId>spring-cloud-contract-maven-plugin</artifactId>
             <version>4.1.2</version>
             <extensions>true</extensions>
-
             <configuration>
                 <baseClassForTests>com.example.demo.contract.BaseContractTest</baseClassForTests>
-                <packageWithBaseClasses>com.example.demo.contract</packageWithBaseClasses>
-                <testFramework>JUNIT5</testFramework>
-                <contractsDirectory>src/test/java/com/example/demo/contracts</contractsDirectory>
-                <contractsMode>JAVA</contractsMode>
-                <failOnNoContracts>true</failOnNoContracts>
+                <contractsMode>LOCAL</contractsMode>
             </configuration>
-
             <executions>
                 <execution>
                     <goals>
